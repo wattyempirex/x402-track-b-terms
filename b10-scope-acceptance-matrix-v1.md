@@ -1,0 +1,18 @@
+# B10 — Scope & Acceptance Matrix (v1)
+**Published:** 2026-10-13.**Fixed scope:** one repository, one framework, up to 10 paid routes, one declared x402 version, one network/scheme. Agreed in writing before payment. **Supported versions (sample): v2 only** — the sample harness implements no v1 challenge-shape rules; T1 reports non-v2 declarations as explicitly UNEXECUTED (not silently skipped). A client engagement's declared version is recorded in the worksheet; v1 coverage, if offered, is scoped and demonstrated per engagement, never implied by the sample. **Out of scope:** migration work (that's B2), new features, other chains/schemes, production deploys, legal/compliance review. Tests are adapted to the client's routes, middleware, and facilitator — not a generic copy.
+
+## Test tiers
+**Tier M (money-free, executable by us):** v2 challenge-envelope shape (version value, `resource`.url string, presence of `scheme`, `network`, `amount`, `asset`, and `payTo` in the first `accepts[]` entry only; later entries and `maxTimeoutSeconds` are not checked by the sample — values and network/asset consistency not validated), CORS preflight allow-list (header names only; allowed method not validated), junk-header response checks using an agreed client-specific assertion. The sample passes only on its fixture's exact `malformed payment` / `seen_header=PAYMENT-SIGNATURE` response; other responses do not by themselves prove the server ignores the header. Valid-payment compatibility remains unproven. Every test reports pass/fail with reproducible evidence for supported checks; unsupported version coverage is explicitly UNEXECUTED.
+**Tier F (funded-required, FAIL CLOSED):** receipt-after-funded-settlement, replay rejection, facilitator-timeout fail-closed. Without client-funded prerequisites these report **UNEXECUTED — never passed**. Simulated receipt/replay paths in demos are labeled SIMULATED and are not settlement evidence; mock tests establish modeled behavior only.
+
+## Acceptance (contractually unambiguous)
+1. Harness runs green (Tier M) against the client's staging routes; defect-injection demo (each Tier-M defect class deliberately introduced → corresponding test fails) reproduced on the client's stack where applicable.
+2. Tier-F tests are wired into the client's CI in fail-closed form with a runbook; the client executes them with their own funded testnet payments and shares evidence; we grade it.
+3. CI config + runbook delivered; one revision round for in-scope items.
+4. **Delivery deadline (4 business days from confirmed payment) covers:** completed Tier-M work + Tier-F adapters/runbook wired fail-closed + CI config. It does NOT require verified funded results.
+5. **Client evidence:** the client has **10 business days from delivery** to supply funded-test evidence (transaction hashes + response headers + timestamps per the runbook's evidence spec). We grade within **3 business days** of receiving complete evidence.
+6. **Missing client evidence:** if the client never supplies funded evidence, the engagement is complete as **"delivered, funded legs unexecuted"** — the money-free deliverable was delivered, so no refund is owed under §5. Refunds apply to missed delivery (a) and stop-rule refund elections (b) per §5.
+7. Labor cap: 10 operator-hours; stop rule mirrors B1 (notify, partial-as-is or full refund).
+
+## What the demo proves — and does not
+Proves: the harness executes, catches the modeled defect classes, and fails closed without funded prerequisites. Does not prove: live settlement, on-chain replay enforcement, production safety, or revenue effects. None claimed.
